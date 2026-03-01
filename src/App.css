@@ -1,0 +1,274 @@
+#root {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  place-items: center;
+  width: 100%;
+  padding: 10rem;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+.popover__anchor {
+  anchor-name: var(--anchor-name, --popover-anchor);
+}
+
+.popover {
+  --popover-gap: 1rem;
+  /* Style reset */
+  padding: 0;
+  border: none;
+  background: none;
+  max-width: none;
+  max-height: none;
+  overflow: visible;
+
+  /* Positioning */
+  position-anchor: var(--anchor-name, --popover-anchor);
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  position-try-fallbacks: var(--position-fallbacks);
+}
+
+.popover:popover-open,
+.popover:modal {
+  display: grid;
+}
+
+.popover::backdrop {
+  background: none;
+}
+
+/*
+  Top
+*/
+
+.popover--top-left {
+  margin-bottom: var(--popover-gap);
+  bottom: anchor(top);
+  right: anchor(left);
+}
+
+@position-try --top-left {
+  inset: auto;
+  margin: 0;
+  margin-bottom: var(--popover-gap);
+  bottom: anchor(top);
+  right: anchor(left);
+}
+
+.popover--top-start {
+  margin-bottom: var(--popover-gap);
+  bottom: anchor(top);
+  left: anchor(left);
+}
+
+@position-try --top-start {
+  inset: auto;
+  margin: 0;
+  margin-bottom: var(--popover-gap);
+  bottom: anchor(top);
+  left: anchor(left);
+}
+
+.popover--top-center {
+  margin-bottom: var(--popover-gap);
+  position-area: top span-all;
+}
+
+@position-try --top-center {
+  inset: auto;
+  margin: 0;
+  margin-bottom: var(--popover-gap);
+  position-area: top span-all;
+}
+
+.popover--top-end {
+  margin-bottom: var(--popover-gap);
+  bottom: anchor(top);
+  right: anchor(right);
+}
+
+@position-try --top-end {
+  inset: auto;
+  margin: 0;
+  margin-bottom: var(--popover-gap);
+  bottom: anchor(top);
+  right: anchor(right);
+}
+
+.popover--top-right {
+  margin-bottom: var(--popover-gap);
+  bottom: anchor(top);
+  left: anchor(right);
+}
+
+@position-try --top-right {
+  inset: auto;
+  margin: 0;
+  margin-bottom: var(--popover-gap);
+  bottom: anchor(top);
+  left: anchor(right);
+}
+
+/*
+  Bottom
+*/
+
+.popover--bottom-left {
+  margin-top: var(--popover-gap);
+  top: anchor(bottom);
+  right: anchor(left);
+}
+
+@position-try --bottom-left {
+  inset: auto;
+  margin: 0;
+  margin-top: var(--popover-gap);
+  top: anchor(bottom);
+  right: anchor(left);
+}
+
+.popover--bottom-start {
+  margin-top: var(--popover-gap);
+  top: anchor(bottom);
+  left: anchor(left);
+}
+
+@position-try --bottom-start {
+  inset: auto;
+  margin: 0;
+  margin-top: var(--popover-gap);
+  top: anchor(bottom);
+  left: anchor(left);
+}
+
+.popover--bottom-center {
+  margin-top: var(--popover-gap);
+  position-area: bottom span-all;
+}
+
+@position-try --bottom-center {
+  inset: auto;
+  margin: 0;
+  margin-top: var(--popover-gap);
+  position-area: bottom span-all;
+}
+
+.popover--bottom-end {
+  margin-top: var(--popover-gap);
+  top: anchor(bottom);
+  right: anchor(right);
+}
+
+@position-try --bottom-end {
+  inset: auto;
+  margin: 0;
+  margin-top: var(--popover-gap);
+  top: anchor(bottom);
+  right: anchor(right);
+}
+
+.popover--bottom-right {
+  margin-top: var(--popover-gap);
+  top: anchor(bottom);
+  left: anchor(right);
+}
+
+@position-try --bottom-right {
+  inset: auto;
+  margin: 0;
+  margin-top: var(--popover-gap);
+  top: anchor(bottom);
+  left: anchor(right);
+}
+
+/*
+  Left
+*/
+
+.popover--left-start {
+  margin-right: var(--popover-gap);
+  top: anchor(top);
+  right: anchor(left);
+}
+
+@position-try --left-start {
+  inset: auto;
+  margin: 0;
+  margin-right: var(--popover-gap);
+  top: anchor(top);
+  right: anchor(left);
+}
+
+.popover--left-center {
+  margin-right: var(--popover-gap);
+  position-area: left span-all;
+}
+
+@position-try --left-center {
+  inset: auto;
+  margin: 0;
+  margin-right: var(--popover-gap);
+  position-area: left span-all;
+}
+
+.popover--left-end {
+  margin-right: var(--popover-gap);
+  bottom: anchor(bottom);
+  right: anchor(left);
+}
+
+@position-try --left-end {
+  inset: auto;
+  margin: 0;
+  margin-right: var(--popover-gap);
+  bottom: anchor(bottom);
+  right: anchor(left);
+}
+
+/*
+  Right
+*/
+
+.popover--right-start {
+  margin-left: var(--popover-gap);
+  top: anchor(top);
+  left: anchor(right);
+}
+
+@position-try --right-start {
+  inset: auto;
+  margin: 0;
+  margin-left: var(--popover-gap);
+  top: anchor(top);
+  left: anchor(right);
+}
+
+.popover--right-center {
+  margin-left: var(--popover-gap);
+  position-area: right span-all;
+}
+
+@position-try --right-center {
+  inset: auto;
+  margin: 0;
+  margin-left: var(--popover-gap);
+  position-area: right span-all;
+}
+
+.popover--right-end {
+  margin-left: var(--popover-gap);
+  bottom: anchor(bottom);
+  left: anchor(right);
+}
+
+@position-try --right-end {
+  inset: auto;
+  margin: 0;
+  margin-left: var(--popover-gap);
+  bottom: anchor(bottom);
+  left: anchor(right);
+}
