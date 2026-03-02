@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react'
 import './App.css'
 import { Popover } from './Popover.tsx'
-import type { Position } from './types.ts'
+import type { PopoverPosition } from './types.ts'
 
-const grid: { position: Position | '-' }[] = [
+const grid: { position: PopoverPosition | '-' }[] = [
   { position: 'top-left' },
   { position: 'top-start' },
-  { position: 'top-center' },
+  { position: 'top' },
   { position: 'top-end' },
   { position: 'top-right' },
   { position: 'left-start' },
@@ -14,11 +14,11 @@ const grid: { position: Position | '-' }[] = [
   { position: '-' },
   { position: '-' },
   { position: 'right-start' },
-  { position: 'left-center' },
+  { position: 'left' },
   { position: '-' },
   { position: '-' },
   { position: '-' },
-  { position: 'right-center' },
+  { position: 'right' },
   { position: 'left-end' },
   { position: '-' },
   { position: '-' },
@@ -26,7 +26,7 @@ const grid: { position: Position | '-' }[] = [
   { position: 'right-end' },
   { position: 'bottom-left' },
   { position: 'bottom-start' },
-  { position: 'bottom-center' },
+  { position: 'bottom' },
   { position: 'bottom-end' },
   { position: 'bottom-right' },
 ]
@@ -49,17 +49,18 @@ function App() {
             key={index}
             mode='non-modal'
             anchor={
-              ({ style, open }) => <button
-                style={style}
-                onFocus={() => {
-                  open()
-                }}
-                onMouseEnter={() => {
-                  open()
-                }}
-              >
-                {cell.position}
-              </button>
+              ({ style, open }) =>
+                <button
+                  style={{ ...style, minWidth: '8rem' }}
+                  onFocus={() => {
+                    open()
+                  }}
+                  onMouseEnter={() => {
+                    open()
+                  }}
+                >
+                  {cell.position}
+                </button>
             }
             position={cell.position}
           >
@@ -100,7 +101,7 @@ function App() {
             </button>
           }
           position="top-start"
-          fallbacks={['bottom-end', 'bottom-left']}
+          fallbackPositions={['bottom-end', 'bottom-left']}
           isOpen={isOpenNonModal}
           onClose={() => setIsOpenNonModal(false)}
           onOpen={() => setIsOpenNonModal(true)}
@@ -127,7 +128,7 @@ function App() {
             </button>
           }
           position="top-start"
-          fallbacks={['bottom-end', 'bottom-left']}
+          fallbackPositions={['bottom-end', 'bottom-left']}
           isOpen={isOpenModal}
           onClose={() => setIsOpenModal(false)}
           onOpen={() => setIsOpenModal(true)}

@@ -11,8 +11,9 @@ import {
     type RefObject,
     type ToggleEvent
 } from "react";
-import type { Position } from "./types";
+import type { PopoverPosition } from "./types";
 import { positionFallbackMap } from "./positionFallbackMap.ts";
+import './popover.css'
 
 export type PopoverBaseProps = {
     anchor: (props: {
@@ -21,9 +22,10 @@ export type PopoverBaseProps = {
         close: () => void;
     }) => ReactNode;
     disablePageScroll?: boolean
+    fallbackPositions?: PopoverPosition[];
+    gap?: number | string;
     isOpen?: boolean;
-    position: Position;
-    fallbacks?: Position[];
+    position: PopoverPosition;
     onClose?: () => void;
     onOpen?: () => void;
 };
@@ -44,7 +46,21 @@ export type PopoverModalProps =
 
 export type PopoverProps = PopoverNonModalProps | PopoverModalProps;
 
-export function Popover({ ref, anchor, className, disablePageScroll, isOpen, position, fallbacks, onClose, onOpen, children, popover = 'auto', ...props }: PopoverProps) {
+export function Popover({
+    ref,
+    anchor,
+    children,
+    className,
+    disablePageScroll,
+    fallbackPositions,
+    gap = '0.5rem',
+    isOpen,
+    popover = 'auto',
+    position,
+    onClose,
+    onOpen,
+    ...props
+}: PopoverProps) {
     const id = useId();
     const isModal = props.mode === "modal"
 
@@ -61,8 +77,8 @@ export function Popover({ ref, anchor, className, disablePageScroll, isOpen, pos
     const anchorName = `--popover-anchor-${id}`;
 
     const positionFallbacks = useMemo(() => {
-        return (fallbacks ?? (positionFallbackMap[position]))?.map((fallback) => `--${fallback}`).join();
-    }, [fallbacks, position]);
+        return (fallbackPositions ?? (positionFallbackMap[position]))?.map((fallback) => `--${fallback}`).join();
+    }, [fallbackPositions, position]);
 
     const lockPageScroll = () => {
         document.body.style.overflow = 'hidden'
@@ -132,48 +148,47 @@ export function Popover({ ref, anchor, className, disablePageScroll, isOpen, pos
             .join(" ")
     ), [className, position])
 
+    const style = useMemo(() => ({
+        "--popover-anchor-name": anchorName,
+        "--popover-gap": typeof gap === 'number' ? `${gap}px` : gap,
+        "--popover-position-try-fallbacks": positionFallbacks,
+    } as CSSProperties
+    ), [anchorName, gap, positionFallbacks])
+
     return (
         <>
             {/* eslint-disable-next-line react-hooks/refs */}
             {anchor({ style: { anchorName }, open, close })}
 
-            <div
-                className="popover"
-                style={
-                    {
-                        "--anchor-name": anchorName,
-                        "--position-fallbacks": positionFallbacks,
-                    } as CSSProperties
-                }
-            >
-                {isModal ? (
-                    <dialog
-                        {...(props)}
-                        ref={dialogRef}
-                        className={mergedClassName}
-                        popover={popover}
-                        onClick={(e) => {
-                            if (e.target === dialogRef.current) {
-                                close();
-                            }
-                            props.onClick?.(e)
-                        }}
-                        onToggle={handleToggle}
-                    >
-                        {children}
-                    </dialog>
-                ) : (
-                    <div
-                        {...(props)}
-                        ref={divRef}
-                        className={mergedClassName}
-                        popover={popover}
-                        onToggle={handleToggle}
-                    >
-                        {children}
-                    </div>
-                )}
-            </div>
+            {isModal ? (
+                <dialog
+                    {...(props)}
+                    ref={dialogRef}
+                    className={mergedClassName}
+                    popover={popover}
+                    style={style}
+                    onClick={(e) => {
+                        if (e.target === dialogRef.current) {
+                            close();
+                        }
+                        props.onClick?.(e)
+                    }}
+                    onToggle={handleToggle}
+                >
+                    {children}
+                </dialog>
+            ) : (
+                <div
+                    {...(props)}
+                    ref={divRef}
+                    className={mergedClassName}
+                    popover={popover}
+                    style={style}
+                    onToggle={handleToggle}
+                >
+                    {children}
+                </div>
+            )}
         </>
     );
 }

@@ -1,20 +1,20 @@
-import type { Position } from "./types";
+import type { PopoverPosition } from "./types";
 
-export const positionFallbackMap: Record<Position, Position[]> = {
-    'top-left': ['top-right', 'bottom-left', 'bottom-right', 'top-center', 'bottom-center'],
-    'top-start': ['top-end', 'bottom-start', 'bottom-end', 'top-center', 'bottom-center'],
-    'top-center': ['bottom-center'],
-    'top-end': ['top-start', 'bottom-end', 'bottom-start', 'top-center', 'bottom-center'],
-    'top-right': ['top-left', 'bottom-right', 'bottom-left', 'top-center', 'bottom-center'],
-    'bottom-left': ['bottom-right', 'top-left', 'top-right', 'bottom-center', 'top-center'],
-    'bottom-start': ['bottom-end', 'top-start', 'top-end', 'bottom-center', 'top-center'],
-    'bottom-center': ['top-center'],
-    'bottom-end': ['bottom-start', 'top-end', 'top-start', 'bottom-center', 'top-center'],
-    'bottom-right': ['bottom-left', 'top-right', 'top-left', 'bottom-center', 'top-center'],
-    'left-start': ['left-end', 'right-start', 'right-end', 'left-center', 'right-center'],
-    'left-center': ['right-center'],
-    'left-end': ['left-start', 'right-end', 'right-start', 'left-center', 'right-center'],
-    'right-start': ['right-end', 'left-start', 'left-end', 'right-center', 'left-center'],
-    'right-center': ['left-center'],
-    'right-end': ['right-start', 'left-end', 'left-start', 'right-center', 'left-center'],
+export const positionFallbackMap: Record<PopoverPosition, PopoverPosition[]> = {
+    'top-left': ['top-right', 'bottom-left', 'bottom-right', 'top', 'bottom'],
+    'top-start': ['top-end', 'bottom-start', 'bottom-end', 'top', 'bottom'],
+    'top': ['bottom'],
+    'top-end': ['top-start', 'bottom-end', 'bottom-start', 'top', 'bottom'],
+    'top-right': ['top-left', 'bottom-right', 'bottom-left', 'top', 'bottom'],
+    'bottom-left': ['bottom-right', 'top-left', 'top-right', 'bottom', 'top'],
+    'bottom-start': ['bottom-end', 'top-start', 'top-end', 'bottom', 'top'],
+    'bottom': ['top'],
+    'bottom-end': ['bottom-start', 'top-end', 'top-start', 'bottom', 'top'],
+    'bottom-right': ['bottom-left', 'top-right', 'top-left', 'bottom', 'top'],
+    'left-start': ['left-end', 'right-start', 'right-end', 'left', 'right'],
+    'left': ['right'],
+    'left-end': ['left-start', 'right-end', 'right-start', 'left', 'right'],
+    'right-start': ['right-end', 'left-start', 'left-end', 'right', 'left'],
+    'right': ['left'],
+    'right-end': ['right-start', 'left-end', 'left-start', 'right', 'left'],
 } as const
