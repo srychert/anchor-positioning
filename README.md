@@ -1,73 +1,182 @@
-# React + TypeScript + Vite
+# React Popover (Popover API + `position-try-fallbacks`)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, headless **React Popover** component built on top of the
+**native HTML Popover API**.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   Non-modal popovers (`<div popover>`)
+-   Modal popovers via `<dialog popover>`
+-   Dynamic positioning using `position-try-fallbacks`
+-   Fully typed (TypeScript)
+-   Controlled and uncontrolled usage
+-   Custom anchor render function
+-   Optional page scroll locking
 
-## React Compiler
+------------------------------------------------------------------------
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## Preview
 
-## Expanding the ESLint configuration
+![Popover Position Grid](./grid.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The grid above demonstrates all supported `PopoverPosition` values and
+their spatial relationship to the anchor element.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+------------------------------------------------------------------------
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Supported Positions
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+``` ts
+export type PopoverPosition =
+  | 'top-left' | 'top-start' | 'top' | 'top-end' | 'top-right'
+  | 'bottom-left' | 'bottom-start' | 'bottom' | 'bottom-end' | 'bottom-right'
+  | 'left-start' | 'left' | 'left-end'
+  | 'right-start' | 'right' | 'right-end'
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Position grid:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| top-left    | top-start    | top           | top-end    | top-right    |
+|-------------|--------------|---------------|------------|--------------|
+| left-start  | -            | -             | -          | right-start  |
+| left        | -            | -             | -          | right        |
+| left-end    | -            | -             | -          | right-end    |
+| bottom-left | bottom-start | bottom        | bottom-end | bottom-right |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+------------------------------------------------------------------------
+
+## Basic Usage (Non-Modal)
+
+``` tsx
+import { Popover } from "./popover";
+
+<Popover
+  position="top"
+  anchor={({ open, close, style }) => (
+    <button style={style} onClick={open}>
+      Open popover
+    </button>
+  )}
+>
+  <div>
+    Hello from popover
+  </div>
+</Popover>
 ```
+
+------------------------------------------------------------------------
+
+## Modal Usage
+
+When `mode="modal"` is passed, the component renders a
+`<dialog popover>`.
+
+``` tsx
+<Popover
+  mode="modal"
+  position="bottom"
+  anchor={({ open, style }) => (
+    <button style={style} onClick={open}>
+      Open modal popover
+    </button>
+  )}
+>
+  <div>
+    This is rendered inside a dialog element.
+  </div>
+</Popover>
+```
+
+------------------------------------------------------------------------
+
+## Controlled Usage
+
+``` tsx
+const [open, setOpen] = useState(false);
+
+<Popover
+  isOpen={open}
+  onOpen={() => setOpen(true)}
+  onClose={() => setOpen(false)}
+  position="right"
+  anchor={({ open }) => (
+    <button onClick={open}>Toggle</button>
+  )}
+>
+  Content
+</Popover>
+```
+
+------------------------------------------------------------------------
+
+# Positioning Behavior
+
+The component:
+
+1.  Uses CSS anchor positioning
+2.  Applies `position-try-fallbacks`
+3.  Automatically flips when space is insufficient
+4.  Applies optional `gap` offset
+5.  Accepts custom fallback order via `fallbackPositions`
+
+Example:
+
+``` tsx
+<Popover
+  position="top"
+  fallbackPositions={["bottom", "right", "left"]}
+  gap={16}
+/>
+```
+
+------------------------------------------------------------------------
+
+# Scroll Locking
+
+When `disablePageScroll` is enabled:
+
+-   Body scrolling is disabled while open
+-   Automatically restored on close
+
+``` tsx
+<Popover disablePageScroll />
+```
+
+------------------------------------------------------------------------
+
+# Browser Support
+
+Requires browsers that support:
+
+-   HTML Popover API
+-   CSS Anchor Positioning
+-   `position-try-fallbacks`
+
+Baseline 2026
+
+------------------------------------------------------------------------
+
+
+# Design Philosophy
+
+This component is:
+
+* Headless (no opinionated styling)
+* Native-first (no positioning libraries)
+* Lightweight
+* Strictly typed
+* Declarative
+
+It intentionally avoids:
+
+* Portals
+* External layout engines
+* Complex overlay managers
+
+
+------------------------------------------------------------------------
+
+
+# License
+
+MIT
